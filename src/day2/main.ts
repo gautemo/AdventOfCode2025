@@ -1,31 +1,31 @@
 import { chunk } from '@std/collections/chunk'
 
 export function part1(input: string) {
-  return invalidIdsSum(input)
+  return invalidIdsSum(input, (id) => {
+    return id.slice(0, id.length / 2) === id.slice(id.length / 2)
+  })
 }
 
 export function part2(input: string) {
-  return invalidIdsSum(input, true)
+  return invalidIdsSum(input, (id) => {
+    for (let chunkSize = 1; chunkSize <= id.length / 2; chunkSize++) {
+      const chunks = chunk(id, chunkSize).map((c) => c.join(''))
+      if (chunks.every((c) => c === chunks[0])) {
+        return true
+      }
+    }
+    return false
+  })
 }
 
-function invalidIdsSum(input: string, multipleRepeats = false) {
+function invalidIdsSum(input: string, isInalid: (id: string) => boolean) {
   const ranges = input.split(',')
   let sum = 0
   for (const range of ranges) {
     const [from, to] = range.split('-')
     for (let i = Number(from); i <= Number(to); i++) {
-      if (multipleRepeats) {
-        for (let j = 1; j <= i.toString().length / 2; j++) {
-          const chunks = chunk(i.toString(), j).map((c) => c.join(''))
-          if (chunks.every((c) => c === chunks[0])) {
-            sum += i
-            break
-          }
-        }
-      } else {
-        if (i.toString().slice(0, i.toString().length / 2) === i.toString().slice(i.toString().length / 2)) {
-          sum += i
-        }
+      if (isInalid(i.toString())) {
+        sum += i
       }
     }
   }

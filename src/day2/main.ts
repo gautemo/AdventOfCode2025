@@ -1,30 +1,18 @@
-import { chunk } from '@std/collections/chunk'
-
 export function part1(input: string) {
-  return invalidIdsSum(input, (id) => {
-    return id.slice(0, id.length / 2) === id.slice(id.length / 2)
-  })
+  return invalidIdsSum(input, /^(\d+)\1$/)
 }
 
 export function part2(input: string) {
-  return invalidIdsSum(input, (id) => {
-    for (let chunkSize = 1; chunkSize <= id.length / 2; chunkSize++) {
-      const chunks = chunk(id, chunkSize).map((c) => c.join(''))
-      if (chunks.every((c) => c === chunks[0])) {
-        return true
-      }
-    }
-    return false
-  })
+  return invalidIdsSum(input, /^(\d+)\1+$/)
 }
 
-function invalidIdsSum(input: string, isInalid: (id: string) => boolean) {
-  const ranges = input.split(',')
+function invalidIdsSum(input: string, isInvalid: RegExp) {
   let sum = 0
+  const ranges = input.split(',')
   for (const range of ranges) {
-    const [from, to] = range.split('-')
-    for (let i = Number(from); i <= Number(to); i++) {
-      if (isInalid(i.toString())) {
+    const [from, to] = range.split('-').map(Number)
+    for (let i = from; i <= to; i++) {
+      if (isInvalid.test(i.toString())) {
         sum += i
       }
     }

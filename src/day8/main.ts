@@ -1,3 +1,5 @@
+import { allPairs } from '../common/utils.ts'
+
 export function part1(input: string, nrOfConnections = 1000) {
   const points = input.split('\n')
   const circuits = allPairs(points)
@@ -47,16 +49,6 @@ function distanceBetween(a: string, b: string) {
   const [aX, aY, aZ] = a.split(',').map(Number)
   const [bX, bY, bZ] = b.split(',').map(Number)
   return Math.sqrt((aX - bX) ** 2 + (aY - bY) ** 2 + (aZ - bZ) ** 2)
-}
-
-function allPairs(points: string[]) {
-  const pairs: string[][] = []
-  for (let i = 0; i < points.length; i++) {
-    for (let j = i + 1; j < points.length; j++) {
-      pairs.push([points[i], points[j]])
-    }
-  }
-  return pairs
 }
 
 if (import.meta.main) {

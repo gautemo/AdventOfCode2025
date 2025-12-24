@@ -1,8 +1,8 @@
 {
   "tasks": {
-    "dev": "deno run --allow-read --watch src/day11/main.ts",
-    "run": "deno run --allow-read src/day11/main.ts",
-    "test": "deno test --allow-read --watch src/day11"
+    "dev": "deno run --allow-read --watch src/day12/main.ts",
+    "run": "deno run --allow-read src/day12/main.ts",
+    "test": "deno test --allow-read --watch src/day12"
   },
   "imports": {
     "@macil/z3-solver": "jsr:@macil/z3-solver@^1.0.4",

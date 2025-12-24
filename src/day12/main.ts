@@ -1,42 +1,26 @@
+const EXTRA_FITS = 2
+
 export function part1(input: string) {
-  const shapes: string[] = []
-  const regions: { width: number; height: number; presents: number[] }[] = []
-  for (const section of input.split('\n\n')) {
-    if (/^\d+:/.test(section)) {
-      shapes.push(section.replace(/^\d+:\n/, ''))
-    } else {
-      for (const region of section.split('\n')) {
-        const [size, presents] = region.split(':')
-        const [width, height] = size.split('x').map(Number)
-        regions.push({
-          width,
-          height,
-          presents: presents.trim().split(' ').map(Number),
-        })
-      }
-    }
-  }
+  const regions = getRegions(input)
   let fits = 0
   for (const region of regions) {
-    const figuresX = Math.floor(region.width / 3)
-    const figuresY = Math.floor(region.height / 3)
-    const figures = figuresX * figuresY
-    const requires = region.presents.reduce((acc, p) => acc + p)
-    if (figures >= requires) {
+    if (Math.floor(region.width / 3) * Math.floor(region.height / 3) + EXTRA_FITS >= region.presents) {
       fits++
-    } else {
-      const overRequires = requires - figures
-      const avaragePresentSpots = region.presents
-        .map((n, i) => [...shapes[i]].filter((c) => c === '#').length * n)
-        .reduce((acc, v) => acc + v) / requires
-      const freeSpace = ((region.width % 3) * region.height) + ((region.height % 3) * region.width) +
-        (figures * (9 - avaragePresentSpots))
-      if (freeSpace > (overRequires ** 2) * avaragePresentSpots) {
-        fits++
-      }
     }
   }
   return fits
+}
+
+function getRegions(input: string) {
+  return input.split('\n\n').at(-1)!.split('\n').map((r) => {
+    const [size, presents] = r.split(':')
+    const [width, height] = size.split('x').map(Number)
+    return {
+      width,
+      height,
+      presents: presents.trim().split(' ').reduce((acc, n) => acc + Number(n), 0),
+    }
+  })
 }
 
 if (import.meta.main) {
